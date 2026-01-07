@@ -1,0 +1,65 @@
+extends CharacterBody2D
+
+const speed = 100
+var current_dir = "none"
+
+func _ready() -> void:
+	$AnimatedSprite2D.play("front_idle")
+
+func _physics_process(delta: float) -> void:
+	player_movement_control(delta)
+
+func player_movement_control(delta):
+	if Input.is_action_pressed("ui_right"):
+		current_dir = "right"
+		play_anim(1)
+		set_player_velocity(speed, 0)
+	elif Input.is_action_pressed("ui_left"):
+		current_dir = "left"
+		play_anim(1)
+		set_player_velocity(-speed, 0)
+	elif Input.is_action_pressed("ui_down"):
+		current_dir = "down"
+		play_anim(1)
+		set_player_velocity(0, speed)
+	elif Input.is_action_pressed("ui_up"):
+		current_dir = "up"
+		play_anim(1)
+		set_player_velocity(0, -speed)
+	else:
+		play_anim(0)
+		set_player_velocity(0,0)
+	
+	move_and_slide()
+
+func set_player_velocity(x_comp, y_comp):
+	velocity = Vector2(x_comp, y_comp)
+
+func play_anim(movement):
+	var dir = current_dir
+	var anim = $AnimatedSprite2D
+	
+	if dir == "right":
+		anim.flip_h = false
+		if movement == 1:
+			anim.play("side_walk")
+		elif movement == 0:
+			anim.play("side_idle")
+	if dir == "left":
+		anim.flip_h = true
+		if movement == 1:
+			anim.play("side_walk")
+		elif movement == 0:
+			anim.play("side_idle")
+	if dir == "down":
+		anim.flip_h = false
+		if movement == 1:
+			anim.play("front_walk")
+		elif movement == 0:
+			anim.play("front_idle")
+	if dir == "up":
+		anim.flip_h = false
+		if movement == 1:
+			anim.play("back_walk")
+		elif movement == 0:
+			anim.play("back_idle")
